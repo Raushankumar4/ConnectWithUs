@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import RegisterUser from "./components/Pages/RegisterUser/RegisterUser";
 
 const App = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   // const token = useSelector((state) => state.auth.token);
   // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -33,7 +33,7 @@ const App = () => {
   // }, [dispatch]);
 
   return (
-    <div>
+    <div className="bg-gray-200">
       <RegisterUser />
     </div>
   );

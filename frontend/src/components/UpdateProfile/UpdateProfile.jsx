@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { CiCamera } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { backendUrl } from "../../constant";
 import { updateUser } from "../../store/slices/userSlice";
@@ -47,6 +46,7 @@ const UpdateProfile = () => {
   const token = useSelector((state) => state.auth.token);
 
   const handleOnProfileUpdate = async (e) => {
+    if (!token) return;
     e.preventDefault();
     setLoading(true);
     try {
@@ -113,7 +113,7 @@ const UpdateProfile = () => {
     }
   };
   const handleBackClick = () => {
-    navigate(-1);
+    navigate(`/profile/${profile?._id}`);
   };
 
   return (
@@ -150,7 +150,7 @@ const UpdateProfile = () => {
                 htmlFor="coverImageInput"
                 className="absolute bottom-0 right-0 bg-black text-white px-2 py-1 rounded-tl-xl cursor-pointer"
               >
-                <CiCamera />
+               <span>edit</span>
               </label>
             </div>
             {/* Profile Image Section */}
@@ -181,9 +181,9 @@ const UpdateProfile = () => {
                 )}
                 <label
                   htmlFor="profileImageInput"
-                  className="absolute bottom-0 right-1 bg-black text-white px-2 py-1 rounded-tl-md cursor-pointer"
+                  className="absolute bottom-0 right-1 bg-black z-50 text-white px-2 py-1 rounded-tl-xl cursor-pointer"
                 >
-                  <CiCamera />
+              <span>edit</span>
                 </label>
               </div>
             </div>
@@ -191,7 +191,7 @@ const UpdateProfile = () => {
 
           <form onSubmit={handleOnProfileUpdate} className="space-y-4 mt-4">
             <div className="lg:flex lg:justify-around">
-              <div className="flex flex-col">
+              <div className="flex flex-col w-full">
                 <label
                   htmlFor="fullName"
                   className="mb-1 font-medium text-gray-700"
@@ -203,7 +203,7 @@ const UpdateProfile = () => {
                   value={profile?.fullName && userInput?.fullName}
                   type="text"
                   name="fullName"
-                  className="p-2 lg:w-fit border border-gray-300 rounded-md"
+                  className="p-2 w-full border border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -234,13 +234,13 @@ const UpdateProfile = () => {
               ) : (
                 "Update Profile"
               )}
-            </button>{" "}
-            <button onClick={handleBackClick}>
+            </button>
+            <button onClick={handleBackClick} className="mx-2">
               <RiArrowGoBackFill />
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-gray-300 rounded-lg">
+          <div className="mt-6 p-4 border rounded-lg">
             <h2 className="text-lg font-semibold mb-4">Change Password</h2>
             <form onSubmit={handleOnPasswordUpdate}>
               <div className="mb-4">
@@ -255,7 +255,7 @@ const UpdateProfile = () => {
                   type="password"
                   name="password"
                   id="currentPassword"
-                  className="block w-full bg-gray-100 border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full  border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -271,7 +271,7 @@ const UpdateProfile = () => {
                   type="password"
                   name="newPassword"
                   id="newPassword"
-                  className="block w-full bg-gray-100 border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full  border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -287,13 +287,13 @@ const UpdateProfile = () => {
                   type="password"
                   name="confirmPassword"
                   id="confirmPassword"
-                  className="block w-full bg-gray-100 border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full border border-gray-300 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                 disabled={loading}
               >
                 {loading ? (

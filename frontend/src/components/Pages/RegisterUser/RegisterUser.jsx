@@ -79,7 +79,7 @@ const RegisterUser = () => {
       toast.success(response.data.message);
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "failed");
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ const RegisterUser = () => {
       setUserInput((prevInput) => ({
         ...prevInput,
         [name]: files[0],
-      }))
+      }));
 
       // Set image preview
       const file = files[0];

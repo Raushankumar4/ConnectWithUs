@@ -25,6 +25,6 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/tweet", tweetRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Server Is listening at LocalHost:4000" });
+  res.json({ message: "Server Is listening " });
 });
 export { app };

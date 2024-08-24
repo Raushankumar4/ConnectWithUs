@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { setToken } from "../store/slices/authSlice";
 
 export const useGetProfile = (id) => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export const useGetProfile = (id) => {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, 
+              Authorization: `Bearer ${token}`,
             },
             withCredentials: true,
           }
@@ -28,10 +29,11 @@ export const useGetProfile = (id) => {
 
         console.log("userdata", res);
         dispatch(setProfile(res.data.user));
+        dispatch(setToken(res.data));
       } catch (error) {
         if (error.response && error.response.status === 401) {
           console.log("Unauthorized. Redirecting to login...");
-          navigate("/login"); 
+          navigate("/login");
         } else {
           console.log("Error fetching profile:", error.message);
         }
@@ -39,5 +41,5 @@ export const useGetProfile = (id) => {
     };
 
     fetchMyProfile();
-  }, [id, token, dispatch, navigate]); 
+  }, [id, token, dispatch, navigate]);
 };
