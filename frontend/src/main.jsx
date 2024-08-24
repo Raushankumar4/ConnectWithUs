@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.js";
 import { Toaster } from "react-hot-toast";
 import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
+import Profile from "./components/Profile/Profile.jsx";
+import UpdateProfile from "./components/UpdateProfile/UpdateProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />,
+  },
+  {
+    path: "/profile/:id",
+    element: <Profile />,
+  },
+  {
+    path: "/profile/:id/update",
+    element: <UpdateProfile />,
   },
   {
     path: "*",

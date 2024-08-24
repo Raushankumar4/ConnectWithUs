@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
-import { loginSuccess } from "../../../store/slices/authSlice";
 import { backendUrl } from "../../../constant";
+import { loginSuccess } from "../../../store/slices/authSlice";
+import { setUser } from "../../../store/slices/userSlice";
 
 const Login = () => {
   const [userInput, setUserInput] = useState({
@@ -45,6 +46,7 @@ const Login = () => {
         userInput
       );
       dispatch(loginSuccess({ token: response.data.token }));
+      dispatch(setUser({ user: response.data.user }));
       toast.success(response.data.message);
       navigate("/home");
     } catch (error) {

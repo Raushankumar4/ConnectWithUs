@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { CiCamera } from "react-icons/ci";
 import { backendUrl } from "../../../constant";
 
-
 const RegisterUser = () => {
   const [userInput, setUserInput] = useState({
     fullName: "",
@@ -93,7 +92,7 @@ const RegisterUser = () => {
       setUserInput((prevInput) => ({
         ...prevInput,
         [name]: files[0],
-      }));
+      }))
 
       // Set image preview
       const file = files[0];

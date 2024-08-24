@@ -146,7 +146,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json({ message: `Welcome ${user.fullName}`, token, success: true });
+    .json({ message: `Welcome ${user.fullName}`, token, user, success: true });
 });
 
 // Logout user
@@ -188,7 +188,7 @@ export const saveandunsaveBookMarks = asyncHandler(async (req, res) => {
 export const getProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).select("-password");
-  return res.status(200).json(new ApiResponse(201, user, "my profile", true));
+  return res.status(200).json({ message: "User Profile", user, success: true });
 });
 
 // export const  upadate profile
