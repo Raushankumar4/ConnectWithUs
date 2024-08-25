@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { setUser, setProfile } from "./store/slices/userSlice";
 // import axios from "axios";
 // import { backendUrl } from "./constant";
-import RegisterUser from "./components/Pages/RegisterUser/RegisterUser";
+import Login from "./components/Pages/Login/Login";
 
 const App = () => {
   // const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <div className="bg-gray-200">
-      <RegisterUser />
+      <Login />
     </div>
   );
 };

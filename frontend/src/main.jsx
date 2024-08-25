@@ -10,6 +10,8 @@ import { Toaster } from "react-hot-toast";
 import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import UpdateProfile from "./components/UpdateProfile/UpdateProfile.jsx";
+import RegisterUser from "./components/Pages/RegisterUser/RegisterUser.jsx";
+import Post from "./components/Post/Post.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,8 +23,16 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/register",
+    element: <RegisterUser />,
+  },
+  {
     path: "/home",
     element: <Home />,
+  },
+  {
+    path: "/post",
+    element: <Post />,
   },
   {
     path: "/profile/:id",

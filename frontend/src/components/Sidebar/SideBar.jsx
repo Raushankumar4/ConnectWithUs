@@ -73,7 +73,7 @@ const Sidebar = ({ onLogout }) => {
             </li>
             <li>
               <Link
-                to="/post"
+                to={`/post`}
                 className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
               >
                 <CiSquarePlus className="w-6 h-6 mr-3" />

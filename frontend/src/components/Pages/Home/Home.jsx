@@ -13,7 +13,7 @@ const Home = () => {
   const [currentView, setCurrentView] = useState("forYou");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const logoutUser = async () => {
