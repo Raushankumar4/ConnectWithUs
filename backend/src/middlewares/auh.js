@@ -80,7 +80,7 @@ export const isAuthenticated = asyncHandler(async (req, res, next) => {
     // Proceed to the next middleware or route handler
     next();
   } catch (error) {
-    // Handle errors related to token verification
+    
     if (error.name === "TokenExpiredError") {
       return next(new ApiError(401, "Token expired", "User session has expired"));
     }

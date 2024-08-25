@@ -188,7 +188,9 @@ export const saveandunsaveBookMarks = asyncHandler(async (req, res) => {
 export const getProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).select("-password");
-  return res.status(200).json({ message: "User Profile", user, success: true });
+  return res
+    .status(200)
+    .json({ message: "User Profile", user, success: true });
 });
 
 // export const  upadate profile
@@ -198,11 +200,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
   const { fullName } = req.body;
   let profileImageLocalPath = req.files?.profileImage?.[0]?.path;
   let coverImageLocalPath = req.files?.coverImage?.[0]?.path;
-
-  // Validate required fields
-  if (!fullName && !profileImageLocalPath && !coverImageLocalPath) {
-    throw new ApiError(400, "No fields to update");
-  }
 
   // Find the user by ID
   const user = await User.findById(id);
@@ -232,7 +229,9 @@ export const updateProfile = asyncHandler(async (req, res) => {
   }).select("-password");
 
   if (!updatedUser) {
-    throw new ApiError(500, "Error updating user profile");
+    return res
+      .status(500)
+      .json({ message: "Error while updating ", success: false });
   }
 
   return res

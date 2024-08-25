@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
-  profile: JSON.parse(localStorage.getItem("profile")) || null,
+  user: null,
+  profile: null,
   otherUsers: null,
 };
 
@@ -12,11 +12,9 @@ const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     setProfile: (state, action) => {
       state.profile = action.payload;
-      localStorage.setItem("profile", JSON.stringify(action.payload));
     },
     setOtherUsers: (state, action) => {
       state.otherUsers = action.payload;
@@ -24,7 +22,6 @@ const userSlice = createSlice({
     updateUser: (state, action) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
-        localStorage.setItem("user", JSON.stringify(state.user));
       }
     },
   },

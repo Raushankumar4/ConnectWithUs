@@ -44,3 +44,11 @@ createRoot(document.getElementById("root")).render(
     <Toaster />
   </Provider>
 );
+
+// import { createRoot } from "react-dom/client";
+// import AppProvider from "./components/AppProvide/AppProvide";
+// import "./index.css";
+
+// const root = createRoot(document.getElementById("root"));
+
+// root.render(<AppProvider />);

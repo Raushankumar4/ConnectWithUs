@@ -24,6 +24,7 @@ const Home = () => {
 
       toast.success(response.data.message);
       dispatch(logout());
+      localStorage.removeItem("reduxState");
       navigate("/login");
     } catch (error) {
       toast.error(
