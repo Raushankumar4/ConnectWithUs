@@ -1,4 +1,3 @@
-// Home.js
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,27 +7,25 @@ import { logout } from "../../../store/slices/authSlice";
 import Sidebar from "../../Sidebar/SideBar";
 import ForYou from "../../Foryou/Foryou";
 import Following from "../../Following/Following";
+import { backendUrl } from "../../../constant";
 
 const Home = () => {
   const [currentView, setCurrentView] = useState("forYou");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const logoutUser = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/api/v1/users/logout"
-      );
+      const response = await axios.get(`${backendUrl}/api/v1/users/logout`);
 
-      toast.success(response.data.message);
       dispatch(logout());
       localStorage.removeItem("reduxState");
+      toast.success(response.data.message);
       navigate("/login");
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "An error occurred during logout"
+        error?.response?.data?.message || "An error occurred during logout"
       );
     }
   };
@@ -38,7 +35,6 @@ const Home = () => {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">
       <Sidebar onLogout={logoutUser} />
-
       <main className="flex-1 bg-gray-100 border-l border-gray-200 lg:mt-2">
         <div className="p-4 flex flex-col items-center">
           <div className="flex gap-4 mb-4">
@@ -50,7 +46,7 @@ const Home = () => {
                   : "text-gray-700 hover:bg-gray-200"
               }`}
             >
-              For you
+              For You
             </button>
             <button
               onClick={() => setCurrentView("following")}
@@ -63,7 +59,6 @@ const Home = () => {
               Following
             </button>
           </div>
-
           <div className="flex justify-center items-center w-full h-full p-4">
             {currentView === "forYou" && <ForYou />}
             {currentView === "following" && <Following />}

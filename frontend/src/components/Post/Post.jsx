@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { backendUrl } from "../../constant";
 import toast from "react-hot-toast";
 import { getCreatedTweets } from "../../store/slices/userSlice";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Post = () => {
   const [post, setPost] = useState({
@@ -18,30 +20,38 @@ const Post = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const token = useSelector((state) => state.auth.token);
-  const { user } = useSelector((store) => store.user);
+  const { isAuthenticated, token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
   const userId = user?.user?._id;
 
   const handleOnChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "postImage") {
       const file = files[0];
-      setPost((prevPost) => ({ ...prevPost, [name]: file }));
-      if (file) {
-        setImagePreview(URL.createObjectURL(file));
-      }
+      setPost((prevPost) => ({
+        ...prevPost,
+        [name]: file,
+      }));
+      setImagePreview(file ? URL.createObjectURL(file) : "");
     } else {
-      setPost((prevPost) => ({ ...prevPost, [name]: value }));
+      setPost((prevPost) => ({
+        ...prevPost,
+        [name]: value,
+      }));
     }
+  };
+
+  const handleQuillChange = (value) => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      description: value,
+    }));
   };
 
   const handleOnPost = async (e) => {
     e.preventDefault();
-
     if (!isAuthenticated || !userId || !token) {
-      handleError("User not authenticated or missing parameters.");
-      return;
+      return handleError("User not authenticated or missing parameters.");
     }
 
     setLoading(true);
@@ -54,7 +64,7 @@ const Post = () => {
         formData.append("postImage", post.postImage);
       }
 
-      const res = await axios.post(
+      const { data } = await axios.post(
         `${backendUrl}/api/v1/tweet/create`,
         formData,
         {
@@ -66,12 +76,11 @@ const Post = () => {
         }
       );
 
-      dispatch(getCreatedTweets({ tweet: res.data }));
-      toast.success(res.data.message);
+      dispatch(getCreatedTweets({ tweet: data }));
+      toast.success(data.message);
       navigate("/home");
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "An error occurred";
-      handleError(errorMessage);
+      handleError(err.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -88,40 +97,54 @@ const Post = () => {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+    <div className="w-full h-screen flex justify-center items-center p-4 md:p-6 lg:p-8">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl relative">
         <div className="absolute top-4 left-4 flex items-center space-x-4">
           <img
             src={user?.user?.profileImage}
             alt="Profile"
-            className="w-16 h-16 rounded-full object-cover"
+            className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
           />
-          <div className="text-left">
-            <h2 className="text-lg font-semibold">{user?.user?.fullName}</h2>
+          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 md:gap-8">
+            <h2 className="text-base md:text-lg font-semibold">
+              {user?.user?.fullName}
+            </h2>
+            <Link
+              to="/home"
+              className="bg-black text-white p-2 rounded-md shadow-md text-center"
+            >
+              Back
+            </Link>
           </div>
         </div>
-        <form onSubmit={handleOnPost} className="pt-24 pl-20">
-          <h1 className="text-2xl mb-4">Create a Post</h1>
+        <form
+          onSubmit={handleOnPost}
+          className="pt-24 pl-20 md:pt-28 md:pl-24 lg:pt-32 lg:pl-28"
+        >
+          <h1 className="text-xl md:text-2xl mb-4 font-semibold">
+            Create a Post
+          </h1>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="mb-4">
-            <label htmlFor="description" className="block text-gray-700">
+            <label
+              htmlFor="description"
+              className="block text-gray-700 text-sm md:text-base"
+            >
               Description
             </label>
-            <input
-              onChange={handleOnChange}
-              type="text"
+            <ReactQuill
               value={post.description}
-              name="description"
-              id="description"
-              className="border border-gray-300 p-2 w-full rounded"
+              onChange={handleQuillChange}
+              theme="snow"
+              className="text-sm md:text-base"
             />
           </div>
           <div className="mb-4 relative">
             <label
               htmlFor="postImage"
-              className="text-white text-sm bg-black p-3 rounded-lg w-10 h-10"
+              className="text-white text-xs md:text-sm bg-black p-2 md:p-3 rounded-lg flex items-center justify-center cursor-pointer    md:w-10 md:h-10 min-w-fit"
             >
-              Add +
+              Add image
             </label>
             <input
               onChange={handleOnChange}
@@ -132,18 +155,18 @@ const Post = () => {
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
             {imagePreview && (
-              <div className="relative">
+              <div className="relative mt-4">
                 <img
                   src={imagePreview}
                   alt="Cover Preview"
-                  className="w-full h-48 object-cover mt-4"
+                  className="w-full h-40 md:h-48 object-cover rounded-md"
                 />
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-lg border border-gray-300"
+                  className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-lg border border-gray-300 text-black text-lg"
                 >
-                  <span className="text-black text-lg">&times;</span>
+                  &times;
                 </button>
               </div>
             )}
@@ -155,8 +178,8 @@ const Post = () => {
               className={`${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-700"
-              } text-white py-2 px-4 rounded`}
+                  : "bg-black hover:bg-blue-700"
+              } text-white py-2 px-4 rounded-md text-sm md:text-base`}
             >
               {loading ? "Posting..." : "Post"}
             </button>
