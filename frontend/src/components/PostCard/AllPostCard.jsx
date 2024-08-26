@@ -1,16 +1,32 @@
 import React from "react";
 import { FaRegComment, FaRegHeart, FaRegBookmark } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const stripHtmlTags = (html) => {
   return html.replace(/<\/?[^>]+>/gi, "");
 };
 
-const AllPost = ({ tweet }) => {
+const AllPostCard = ({ tweet }) => {
   const cleanedDescription = stripHtmlTags(tweet?.description || "");
+  const { profile } = useSelector((store) => store.user);
+  const { user } = useSelector((store) => store.user);
 
   return (
     <div className="tweet-card mb-6 p-4 bg-white rounded-lg shadow-md">
-      {/* Post Image */}
+      <div className="flex items-center space-x-4 mb-4">
+        <Link to={`/profile/${user?.user?._id}`}>
+          <img
+            src={profile?.profileImage}
+            alt="User Profile"
+            className="w-12 h-12 rounded-full border-2 border-gray-300"
+          />
+        </Link>
+        <div>
+          <h2 className="text-lg font-semibold">{profile?.fullName}</h2>
+          <p className="text-gray-600 text-sm">@{profile?.username}</p>
+        </div>
+      </div>
       {tweet?.postImage && (
         <img
           src={tweet?.postImage}
@@ -40,4 +56,4 @@ const AllPost = ({ tweet }) => {
   );
 };
 
-export default AllPost;
+export default AllPostCard;

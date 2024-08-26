@@ -7,6 +7,7 @@ const initialState = {
   tweet: null,
   allTweets: [],
   otherTweets: [],
+  myPost: [],
 };
 
 const userSlice = createSlice({
@@ -36,6 +37,9 @@ const userSlice = createSlice({
     getOtherTweets: (state, action) => {
       state.otherTweets = action.payload;
     },
+    getMyAllPost: (state, action) => {
+      state.myPost = action.payload;
+    },
   },
 });
 
@@ -47,5 +51,6 @@ export const {
   getOtherTweets,
   setOtherUsers,
   updateUser,
+  getMyAllPost,
 } = userSlice.actions;
 export default userSlice.reducer;

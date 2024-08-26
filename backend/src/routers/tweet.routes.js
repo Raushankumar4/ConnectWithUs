@@ -4,6 +4,7 @@ import {
   deleteTweet,
   getAllTweets,
   getFollowingtweets,
+  getMyTweets,
   likeTweetOrDislikeTweet,
   updateTweet,
 } from "../controllers/tweet.Controller.js";
@@ -21,6 +22,7 @@ router
   .route("/update/:id")
   .put(isAuthenticated, upload.single("postImage"), updateTweet);
 router.route("/getalltweets/:id").get(isAuthenticated, getAllTweets);
+router.route("/getmypost/:id").get(isAuthenticated, getMyTweets);
 
 router
   .route("/getallfollowingtweets/:id")

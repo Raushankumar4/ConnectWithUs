@@ -164,6 +164,25 @@ export const likeTweetOrDislikeTweet = asyncHandler(async (req, res) => {
   }
 });
 
+// get only my tweets
+export const getMyTweets = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  // Find the logged-in user by their ID
+  const loggedInUser = await User.findById(id);
+  if (!loggedInUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Fetch the tweets for the logged-in user
+  const loggedInUserTweets = await Tweet.find({ userId: id });
+
+  // Respond with the user's tweets
+  return res
+    .status(200)
+    .json({ message: "my post", tweets: loggedInUserTweets });
+});
+
 // getting all tweets
 export const getAllTweets = asyncHandler(async (req, res) => {
   const id = req.params.id;

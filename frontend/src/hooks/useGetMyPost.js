@@ -2,22 +2,24 @@ import axios from "axios";
 import { backendUrl } from "../constant";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfile } from "../store/slices/userSlice";
+import { getMyAllPost } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export const useGetProfile = (id) => {
+export const useGetMyPost = (id) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    const fetchMyProfile = async () => {
+    const fetchMyPost = async () => {
       if (!id || !token) return;
 
       try {
+        console.log("Token:", token);
+
         const res = await axios.get(
-          `${backendUrl}/api/v1/users/getProfile/${id}`,
+          `${backendUrl}/api/v1/tweet/getmypost/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -28,10 +30,10 @@ export const useGetProfile = (id) => {
         );
 
         toast.success(res?.data?.message);
-        dispatch(setProfile(res.data.user));
+        dispatch(getMyAllPost(res.data));
       } catch (error) {
         toast.error(error?.res?.data?.message);
-        console.error("Error fetching profile:", error);
+        console.error("Error while fetching the post:", error);
 
         if (error.response) {
           const { status, data } = error.response;
@@ -51,6 +53,6 @@ export const useGetProfile = (id) => {
       }
     };
 
-    fetchMyProfile();
+    fetchMyPost();
   }, [id, token, dispatch, navigate]);
 };

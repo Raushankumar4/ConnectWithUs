@@ -1,16 +1,18 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useGetProfile } from "../../hooks/useGetProfile";
 import { useSelector } from "react-redux";
-import MyPost from "../Mypost/MyPost";
+import MyPost from "../UserPost/MyPost";
 import { useState } from "react";
 import Modal from "../ResusableComponents/Modal";
+import { useGetMyPost } from "../../hooks/useGetMyPost";
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { user, profile } = useSelector((store) => store.user);
   const token = useSelector((store) => store.auth);
-  useGetProfile(user?.user?._id);
+  useGetProfile(user?.user?._id)
+  useGetMyPost(user?.user?._id);
 
   if (!token) return;
   if (!isAuthenticated) return null;
@@ -24,7 +26,7 @@ const Profile = () => {
     <>
       {isAuthenticated && (
         <div className="min-h-screen bg-gray-200 flex items-center justify-center">
-          <div className="w-full max-w-1xl mx-auto my-4 p-6 bg-white text-gray-800 shadow-lg rounded-lg overflow-hidden">
+          <div className="w-1/2 max-w-1xl mx-auto my-4 p-6 bg-white text-gray-800 shadow-lg rounded-lg overflow-hidden">
             {/* Back Button */}
             <button
               onClick={handleBackClick}
