@@ -125,13 +125,17 @@ export const updateTweet = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!updatedTweet) throw new ApiError(404, "Tweet not found", false);
+  if (!updatedTweet)
+    return res
+      .status(404)
+      .json({ message: "You don't have any post to delete", success: false });
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, updatedTweet, "Tweet updated successfully", true)
-    );
+  if (updatedTweet)
+    return res.status(200).json({
+      message: "Post Updated Successfully",
+      updateTweet,
+      success: true,
+    });
 });
 
 // like or dislike
@@ -162,10 +166,10 @@ export const likeTweetOrDislikeTweet = asyncHandler(async (req, res) => {
 
 // getting all tweets
 export const getAllTweets = asyncHandler(async (req, res) => {
-  const { id } = req.params.id;
+  const id = req.params.id;
 
   const loggedInUser = await User.findById(id);
-  const loggedInUserTweets = await Tweet.find({ User: id });
+  const loggedInUserTweets = await Tweet.find({ userId: id });
   const followingUserTweets = await Promise.all(
     loggedInUser.following.map((otherUserId) => {
       return Tweet.find({ userId: otherUserId });
@@ -175,7 +179,6 @@ export const getAllTweets = asyncHandler(async (req, res) => {
     tweets: loggedInUserTweets.concat(...followingUserTweets),
   });
 });
-
 
 // get following tweets
 export const getFollowingtweets = asyncHandler(async (req, res) => {

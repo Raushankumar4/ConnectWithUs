@@ -19,15 +19,23 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   // Checking all fields are not empty
   if (!fullName || !username || !email || !password)
-    throw new ApiError(401, "All fields are required");
+    return res
+      .status(401)
+      .json({ message: "All fields are required", success: false });
 
   // Validate email
   if (!validator.isEmail(email))
-    throw new ApiError(400, "Invalid email Please write correct email");
+    return res.status(400).json({
+      message: "Invalid email Please write correct email",
+      success: false,
+    });
 
   // Validate password length (more than 6 characters)
   if (password.length <= 6)
-    throw new ApiError(400, "Password must be longer than 6 characters");
+    return res.status(400).json({
+      message: "Password must be longer than 6 characters",
+      success: false,
+    });
 
   // Check if the user already exists in the database
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -63,12 +71,16 @@ export const registerUser = asyncHandler(async (req, res) => {
     coverImage: coverImage.url,
   });
 
-  if (!user) throw new ApiError(500, "Error while registering user");
+  if (!user)
+    return res.status(500).json({
+      message: "Error while registering user",
+      success: true,
+    });
 
   const createdUser = await User.findById(user._id).select("-password");
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User Register Succesfully", true));
+    .json({ message: "User Register Succesfully", createdUser, success: true });
 });
 
 // login user
@@ -112,17 +124,17 @@ export const loginUser = asyncHandler(async (req, res) => {
   const { email, password, confirmPassword } = req.body;
 
   // Validate all required fields
-  if (!email || !password || !confirmPassword) {
-    throw new ApiError(
-      401,
-      "Email, password, and confirm password are required"
-    );
-  }
+  if (!email || !password || !confirmPassword)
+    return res.status(401).json({
+      message: "Email, password, and confirm password are required",
+      success: false,
+    });
 
   // Check if passwords match
-  if (password !== confirmPassword) {
-    throw new ApiError(400, "Passwords do not match");
-  }
+  if (password !== confirmPassword)
+    return res
+      .status(401)
+      .json({ message: "Password does not match", success: false });
 
   // Find user by email
   const user = await User.findOne({ email });
@@ -155,7 +167,7 @@ export const logOutUser = asyncHandler(async (req, res) => {
   removeTokenCookie(res);
   return res
     .status(200)
-    .json(new ApiResponse(200, "", `User logged out successfully`, true));
+    .json({ message: "log out successfully", success: false });
 });
 // book marks
 
@@ -188,9 +200,7 @@ export const saveandunsaveBookMarks = asyncHandler(async (req, res) => {
 export const getProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).select("-password");
-  return res
-    .status(200)
-    .json({ message: "User Profile", user, success: true });
+  return res.status(200).json({ message: "User Profile", user, success: true });
 });
 
 // export const  upadate profile
@@ -305,30 +315,33 @@ export const unFollowUser = asyncHandler(async (req, res) => {
     );
 });
 
+// update password
 export const updatePassword = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { currentPassword, newPassword } = req.body;
 
   // Validate required fields
-  if (!currentPassword || !newPassword) {
-    throw new ApiError(400, "Current password and new password are required");
-  }
+  if (!currentPassword || !newPassword)
+    return res.status(400).json({
+      message: "Current password and new password are required",
+      success: false,
+    });
 
-  if (newPassword.length <= 6) {
-    throw new ApiError(400, "New password must be longer than 6 characters");
-  }
+  if (newPassword.length <= 6)
+    return res.status(400).json({
+      message: "New password must be longer than 6 characters",
+      success: false,
+    });
 
   // Find the user by ID
   const user = await User.findById(id);
-  if (!user) {
-    throw new ApiError(404, "User not found");
-  }
+  if (!user)
+    return res.status(404).json({ message: "User not found", success: false });
 
   // Check if current password is correct
   const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
-  if (!isPasswordMatch) {
-    throw new ApiError(401, "Current password is incorrect");
-  }
+  if (!isPasswordMatch)
+    return res.status(403).json({ message: "Current password is in correct" });
 
   // Hash the new password
   const hashPassword = await bcrypt.hash(newPassword, 16);
@@ -339,5 +352,5 @@ export const updatePassword = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, null, "Password updated successfully", true));
+    .json({ message: "Password updated successfully", success: true });
 });

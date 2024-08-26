@@ -21,6 +21,9 @@ router
   .route("/update/:id")
   .put(isAuthenticated, upload.single("postImage"), updateTweet);
 router.route("/getalltweets/:id").get(isAuthenticated, getAllTweets);
-router.route("/getallfollowingtweets/:id").get(isAuthenticated, getFollowingtweets);
+
+router
+  .route("/getallfollowingtweets/:id")
+  .get(isAuthenticated, getFollowingtweets);
 
 export default router;

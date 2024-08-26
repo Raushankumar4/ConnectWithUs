@@ -55,7 +55,7 @@ const Login = () => {
       toast.success(response.data.message);
       navigate('/home');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'An error occurred');
+      toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }

@@ -5,8 +5,8 @@ const initialState = {
   profile: null,
   otherUsers: null,
   tweet: null,
-  allTweets: null,
-  otherTweets: null,
+  allTweets: [],
+  otherTweets: [],
 };
 
 const userSlice = createSlice({
