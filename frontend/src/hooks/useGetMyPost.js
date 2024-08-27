@@ -29,7 +29,7 @@ export const useGetMyPost = (id) => {
           }
         );
 
-        toast.success(res?.data?.message);
+        
         dispatch(getMyAllPost(res.data));
       } catch (error) {
         toast.error(error?.res?.data?.message);

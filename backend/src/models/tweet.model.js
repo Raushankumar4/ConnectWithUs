@@ -16,6 +16,7 @@ const tweetSchema = new Schema(
     },
     postImage: {
       type: String,
+      required: false,
     },
     comment: {
       type: Array,

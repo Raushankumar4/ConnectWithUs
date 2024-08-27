@@ -40,6 +40,21 @@ const userSlice = createSlice({
     getMyAllPost: (state, action) => {
       state.myPost = action.payload;
     },
+    deletePost: (state, action) => {
+      const postIdToDelete = action.payload;
+      if (state.myPost) {
+        state.myPost = state.myPost?.tweets?.filter(
+          (post) => post?._id !== postIdToDelete
+        );
+      }
+    },
+
+    updatePost: (state, action) => {
+      const updatedPost = action.payload;
+      state.myPost = state.myPost?.tweets?.map((post) =>
+        post?._id === updatedPost._id ? { ...post, ...updatedPost } : post
+      );
+    },
   },
 });
 
@@ -52,5 +67,8 @@ export const {
   setOtherUsers,
   updateUser,
   getMyAllPost,
+  deletePost,
+  updatePost,
 } = userSlice.actions;
+
 export default userSlice.reducer;

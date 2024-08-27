@@ -338,7 +338,7 @@ export const updatePassword = asyncHandler(async (req, res) => {
   if (!user)
     return res.status(404).json({ message: "User not found", success: false });
 
-  // Check if current password is correct
+  // Check if current password is correct.
   const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
   if (!isPasswordMatch)
     return res.status(403).json({ message: "Current password is in correct" });

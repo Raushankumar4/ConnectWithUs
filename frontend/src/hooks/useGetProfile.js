@@ -27,7 +27,7 @@ export const useGetProfile = (id) => {
           }
         );
 
-        toast.success(res?.data?.message);
+        // toast.success(res?.data?.message);
         dispatch(setProfile(res.data.user));
       } catch (error) {
         toast.error(error?.res?.data?.message);

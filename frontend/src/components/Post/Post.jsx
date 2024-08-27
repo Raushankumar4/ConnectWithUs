@@ -80,7 +80,7 @@ const Post = () => {
       toast.success(data.message);
       navigate("/home");
     } catch (err) {
-      handleError(err.response?.data?.message || "An error occurred");
+      handleError(err.response?.data?.message);
     } finally {
       setLoading(false);
     }

@@ -1,12 +1,7 @@
-// ForYou.js
 import React from "react";
-import { useGetAllPost } from "../../hooks/useGetAllPost";
-import { useSelector } from "react-redux";
 import AllPost from "../UserPost/AllPost";
 
 const ForYou = () => {
-  const { user } = useSelector((store) => store.user);
-  useGetAllPost(user?.user?._id);
   return (
     <div className="w-full h-screen box-content text-center py-4">
       <h2 className="text-2xl font-bold">For You</h2>

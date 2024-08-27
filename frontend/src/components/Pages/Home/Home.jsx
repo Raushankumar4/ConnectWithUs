@@ -8,12 +8,17 @@ import Sidebar from "../../Sidebar/SideBar";
 import ForYou from "../../Foryou/Foryou";
 import Following from "../../Following/Following";
 import { backendUrl } from "../../../constant";
+import { useGetAllPost } from "../../../hooks/useGetAllPost";
+import { useGetProfile } from "../../../hooks/useGetProfile";
 
 const Home = () => {
   const [currentView, setCurrentView] = useState("forYou");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { user } = useSelector((store) => store.user);
+  useGetAllPost(user?.user?._id);
+  useGetProfile(user?.user?._id);
 
   const logoutUser = async () => {
     try {

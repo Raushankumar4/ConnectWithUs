@@ -2,7 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useGetProfile } from "../../hooks/useGetProfile";
 import { useSelector } from "react-redux";
 import MyPost from "../UserPost/MyPost";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../ResusableComponents/Modal";
 import { useGetMyPost } from "../../hooks/useGetMyPost";
 
@@ -11,7 +11,8 @@ const Profile = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { user, profile } = useSelector((store) => store.user);
   const token = useSelector((store) => store.auth);
-  useGetProfile(user?.user?._id)
+  useGetProfile(user?.user?._id);
+
   useGetMyPost(user?.user?._id);
 
   if (!token) return;

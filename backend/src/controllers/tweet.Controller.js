@@ -9,38 +9,36 @@ import { deleteFromCloudinary } from "../utils/cloudinary.js";
 export const createTweet = asyncHandler(async (req, res) => {
   const { description, id } = req.body;
 
-  if (!description || !id)
-    throw new ApiError(401, "all field are required", false);
+  if (!description || !id) {
+    throw new ApiError(401, "All fields are required", false);
+  }
 
-  // Use req.file for single file upload
-  const postImageLocalPath = req.file.path; // Get the file path
-  const uploadResult = await uploadOnCloudinary(postImageLocalPath);
+  let postImageUrl = null;
+
+  if (req.file) {
+    const postImageLocalPath = req.file.path;
+    const uploadResult = await uploadOnCloudinary(postImageLocalPath);
+    postImageUrl = uploadResult.url;
+  }
 
   const tweetCreated = await Tweet.create({
     description,
     userId: id,
-    postImage: uploadResult.url,
+    postImage: postImageUrl,
   });
 
-  // if (!tweetCreated) throw new ApiError(500, "Internal Server Error", false);
+  if (!tweetCreated) {
+    return res.status(500).json({ message: "Failed to post", success: false });
+  }
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, tweetCreated, "tweet Created Succcessfully", true)
-    );
+  return res.status(200).json({
+    message: "Post Created Successfully",
+    tweetCreated,
+    success: true,
+  });
 });
 
 // delete tweet
-
-// export const deleteTweet = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-
-//   await Tweet.findByIdAndDelete(id);
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, "", "Tweet Deleted Successfully !", true));
-// });
 
 export const deleteTweet = asyncHandler(async (req, res) => {
   const { id } = req.params;
