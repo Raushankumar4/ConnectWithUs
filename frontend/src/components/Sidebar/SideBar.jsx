@@ -16,7 +16,7 @@ const Sidebar = ({ onLogout }) => {
   const { user } = useSelector((store) => store.user);
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button
         onClick={() => setSidebarOpen(!isSidebarOpen)}
         className="lg:hidden absolute top-4 left-4 text-black text-3xl z-50"
@@ -27,7 +27,7 @@ const Sidebar = ({ onLogout }) => {
       <div
         className={`fixed inset-0 lg:bg-gray-100 bg-gray-200 text-black w-64 box-content flex flex-col font-semibold text-lg tracking-wide space-y-4 p-4 lg:relative lg:w-72 lg:block transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } lg:translate-x-0 `}
       >
         <Link className="flex items-center py-4 lg:mt-0 mt-10 text-2xl font-bold">
           <IoLogoAndroid className="w-12 h-12 mr-2" />
@@ -86,7 +86,7 @@ const Sidebar = ({ onLogout }) => {
                 className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
               >
                 <PiBookmarkSimple className="w-6 h-6 mr-3" />
-                <span className="md:inline">Upadate Profile</span>
+                <span className="md:inline">Setting</span>
               </Link>
             </li>
           </ul>

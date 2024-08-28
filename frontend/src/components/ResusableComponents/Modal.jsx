@@ -1,7 +1,13 @@
 import React from "react";
+import { useGetMyPost } from "../../hooks/useGetMyPost";
+import { useSelector } from "react-redux";
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
+
+  const { user } = useSelector((store) => store.user);
+
+  useGetMyPost(user?.user?._id);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
