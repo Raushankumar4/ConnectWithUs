@@ -76,7 +76,7 @@ const Home = () => {
           </div>
         </div>
         {/* Sidebar for smaller screens */}
-        <div className="w-full lg:w-[26vw] p-4 border-l border-gray-200 flex flex-col">
+        <div className="w-full  lg:w-[26vw] p-4 border-l border-gray-200 flex flex-col">
           <input
             type="text"
             placeholder="Search..."
