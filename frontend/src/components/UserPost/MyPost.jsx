@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import MyPostCard from "../PostCard/MyPostCard";
-import toast from "react-hot-toast";
 import { useGetMyPost } from "../../hooks/useGetMyPost";
 
 const MyPost = () => {
