@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { backendUrl } from "../../constant";
 import { useNavigate } from "react-router-dom";
@@ -78,18 +78,6 @@ const UpdatePost = ({ postId, post }) => {
     setUpdatePostState((prev) => ({ ...prev, postImage: null }));
     setImagePreview("");
   };
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (
-  //       imagePreview &&
-  //       typeof imagePreview === "string" &&
-  //       imagePreview.startsWith("blob:")
-  //     ) {
-  //       URL.revokeObjectURL(imagePreview);
-  //     }
-  //   };
-  // }, [imagePreview]);
 
   return (
     <div className="h-auto">

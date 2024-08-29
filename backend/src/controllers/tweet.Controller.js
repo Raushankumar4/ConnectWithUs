@@ -148,17 +148,13 @@ export const likeTweetOrDislikeTweet = asyncHandler(async (req, res) => {
     await Tweet.findByIdAndUpdate(tweetId, {
       $pull: { like: loggedInUserId },
     });
-    return res
-      .status(200)
-      .json(new ApiResponse(200, "", "User Disliked Your Tweet ", true));
+    return res.status(200).json({ message: "Disliked", success: false });
   } else {
     //like
     await Tweet.findByIdAndUpdate(tweetId, {
       $push: { like: loggedInUserId },
     });
-    return res
-      .status(200)
-      .json(new ApiResponse(200, "", "User liked Your Tweet ", true));
+    return res.status(200).json({ message: "You Liked", success: true });
   }
 });
 
