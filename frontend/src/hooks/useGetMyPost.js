@@ -5,6 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMyAllPost } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  errorToast,
+  successToast,
+} from "../components/ResusableComponents/NotifyToast";
 
 export const useGetMyPost = (id) => {
   const dispatch = useDispatch();
@@ -29,10 +33,10 @@ export const useGetMyPost = (id) => {
           }
         );
 
-        
         dispatch(getMyAllPost(res.data));
+        successToast(res.data.message);
       } catch (error) {
-        toast.error(error?.res?.data?.message);
+        errorToast(error?.res?.data?.message);
         console.error("Error while fetching the post:", error);
 
         if (error.response) {

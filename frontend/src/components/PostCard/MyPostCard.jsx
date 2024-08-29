@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaRegComment,
   FaRegHeart,
@@ -8,12 +8,15 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePostThunk } from "../../store/thunk/deletePost";
-import toast from "react-hot-toast";
 import { useGetMyPost } from "../../hooks/useGetMyPost";
+import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
+import Modal from "../ResusableComponents/Modal";
+import UpdatePost from "../UpdatePost/UpdatePost";
 
 const stripHtmlTags = (html) => html.replace(/<\/?[^>]+>/gi, "");
 
 const MyPostCard = ({ post }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const cleanedDescription = stripHtmlTags(post?.description || "");
   const { profile, user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -25,14 +28,14 @@ const MyPostCard = ({ post }) => {
       dispatch(deletePostThunk({ id: post?._id, token }))
         .unwrap()
         .then(() => {
-          toast.success("Post deleted successfully.");
+          successToast("Post deleted successfully.");
         })
         .catch((error) => {
           console.error("Error during delete operation:", error);
-          toast.error("Failed to delete the post. Please try again.");
+          errorToast("Failed to delete the post. Please try again.");
         });
     } else {
-      toast.error("No authorization token found.");
+      errorToast("No authorization token found.");
     }
   };
 
@@ -87,9 +90,15 @@ const MyPostCard = ({ post }) => {
       </div>
       {/* Edit and Delete Buttons */}
       <div className="absolute top-2 right-2 flex space-x-2">
-        <button className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-300">
-          <FaEdit className="w-5 h-5 text-gray-600" />
+        <button
+          onClick={() => setIsOpen((prev) => !prev)}
+          className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-300"
+        >
+          {isOpen ? "" : <FaEdit className="w-5 h-5 text-gray-600" />}
         </button>
+        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          <UpdatePost postId={post?._id} post={post} />
+        </Modal>
         <button
           onClick={confirmAndDelete}
           className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-300"

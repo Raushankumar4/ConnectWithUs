@@ -2,7 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { deletePost } from "../slices/userSlice";
 import { backendUrl } from "../../constant";
-import toast from "react-hot-toast";
+import {
+  errorToast,
+  successToast,
+} from "../../components/ResusableComponents/NotifyToast";
 
 export const deletePostThunk = createAsyncThunk(
   "user/deletePost",
@@ -17,13 +20,13 @@ export const deletePostThunk = createAsyncThunk(
       });
 
       dispatch(deletePost(id));
-      toast.success("Post deleted ");
+      successToast("Post Deleted");
     } catch (error) {
-      toast.error(
+      errorToast(
         "Failed to delete the post:",
         error.response ? error.response.data : error.message
       );
-      toast.error("Failed to delete the post. Please try again.");
+      errorToast("Failed to delete the post. Please try again.");
     }
   }
 );

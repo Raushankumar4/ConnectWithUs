@@ -1,19 +1,22 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
-import { useNavigate, Link } from 'react-router-dom';
-import { backendUrl } from '../../../constant';
-import { loginSuccess } from '../../../store/slices/authSlice';
-import { setUser } from '../../../store/slices/userSlice';
-import InputField from '../../ResusableComponents/InputField'; 
-import Spinner from '../../ResusableComponents/Spinner';
+import axios from "axios";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { backendUrl } from "../../../constant";
+import { loginSuccess } from "../../../store/slices/authSlice";
+import { setUser } from "../../../store/slices/userSlice";
+import InputField from "../../ResusableComponents/InputField";
+import Spinner from "../../ResusableComponents/Spinner";
+import {
+  errorToast,
+  successToast,
+} from "../../ResusableComponents/NotifyToast";
 
 const Login = () => {
   const [userInput, setUserInput] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -24,12 +27,12 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!userInput.email) newErrors.email = 'Email is required';
-    if (!userInput.password) newErrors.password = 'Password is required';
+    if (!userInput.email) newErrors.email = "Email is required";
+    if (!userInput.password) newErrors.password = "Password is required";
     if (!userInput.confirmPassword)
-      newErrors.confirmPassword = 'Confirm Password is required';
+      newErrors.confirmPassword = "Confirm Password is required";
     if (userInput.password !== userInput.confirmPassword)
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -46,16 +49,16 @@ const Login = () => {
         userInput,
         {
           headers: {
-            'Content-Type': 'application/json', // Ensure proper content type
+            "Content-Type": "application/json", // Ensure proper content type
           },
         }
       );
       dispatch(loginSuccess({ token: response.data.token }));
       dispatch(setUser({ user: response.data.user }));
-      toast.success(response.data.message);
-      navigate('/home');
+      successToast(response.data.message);
+      navigate("/home");
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      errorToast(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -69,7 +72,9 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-400 p-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-center text-3xl font-bold mb-6 text-gray-800">Login</h1>
+        <h1 className="text-center text-3xl font-bold mb-6 text-gray-800">
+          Login
+        </h1>
         <form onSubmit={handleOnSubmit} className="space-y-4">
           <InputField
             type="email"
@@ -100,12 +105,15 @@ const Login = () => {
             className="w-full py-2 px-4 rounded-md bg-[#18181B] text-white hover:bg-gray-600 transition-all ease-in-out"
             disabled={loading}
           >
-            {loading ? <Spinner /> : 'Login'}
+            {loading ? <Spinner /> : "Login"}
           </button>
         </form>
         <p className="mt-6 text-center text-gray-600">
-          Don’t have an account?{' '}
-          <Link to="/register" className="text-blue-500 hover:text-blue-600 font-medium">
+          Don’t have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-500 hover:text-blue-600 font-medium"
+          >
             Register
           </Link>
         </p>

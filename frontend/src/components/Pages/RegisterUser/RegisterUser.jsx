@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { backendUrl } from "../../../constant";
-import InputField from "../../ResusableComponents/InputField"; 
-import ImagePreview from "../../ResusableComponents/ImagePreview"; 
-import Spinner from "../../ResusableComponents/Spinner"; 
+import InputField from "../../ResusableComponents/InputField";
+import ImagePreview from "../../ResusableComponents/ImagePreview";
+import Spinner from "../../ResusableComponents/Spinner";
+import {
+  errorToast,
+  successToast,
+} from "../../ResusableComponents/NotifyToast";
+
 const RegisterUser = () => {
   const [userInput, setUserInput] = useState({
     fullName: "",
@@ -77,10 +81,10 @@ const RegisterUser = () => {
           },
         }
       );
-      toast.success(response.data.message);
+      successToast(response.data.message);
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      errorToast(error.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }

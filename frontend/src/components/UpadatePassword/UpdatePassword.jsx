@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { backendUrl } from "../../constant";
 import { useSelector } from "react-redux";
 import Spinner from "../ResusableComponents/Spinner";
+import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 
 const UpdatePassword = ({ id }) => {
   const [updatePassword, setUpdatePassword] = useState({
@@ -47,10 +48,9 @@ const UpdatePassword = ({ id }) => {
           withCredentials: true,
         }
       );
-      toast.success("Password updated successfully");
+      successToast("Password updated successfully");
     } catch (error) {
-      console.error(error.message);
-      toast.error("Failed to update password");
+      errorToast("Failed to update password");
     } finally {
       setLoading(false);
     }

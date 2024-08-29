@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/slices/authSlice";
@@ -12,10 +11,14 @@ import { useGetAllPost } from "../../../hooks/useGetAllPost";
 import { useGetProfile } from "../../../hooks/useGetProfile";
 import OtherUser from "../../OtherUsers/OtherUser";
 import { useGetOtherUsers } from "../../../hooks/useGetOtherUsers";
+import {
+  errorToast,
+  successToast,
+} from "../../ResusableComponents/NotifyToast";
 
 const Home = () => {
   const [currentView, setCurrentView] = useState("forYou");
-  const [searchQuery, setSearchQuery] = useState(""); // For managing search input
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -30,10 +33,10 @@ const Home = () => {
 
       dispatch(logout());
       localStorage.removeItem("reduxState");
-      toast.success(response.data.message);
+      successToast(response.data.message);
       navigate("/login");
     } catch (error) {
-      toast.error(
+      errorToast(
         error?.response?.data?.message || "An error occurred during logout"
       );
     }

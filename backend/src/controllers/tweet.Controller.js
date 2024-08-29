@@ -126,7 +126,7 @@ export const updateTweet = asyncHandler(async (req, res) => {
   if (!updatedTweet)
     return res
       .status(404)
-      .json({ message: "You don't have any post to delete", success: false });
+      .json({ message: "Failded to update", success: false });
 
   if (updatedTweet)
     return res.status(200).json({

@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { backendUrl } from "../../constant";
-import toast from "react-hot-toast";
 import { getCreatedTweets } from "../../store/slices/userSlice";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 
 const Post = () => {
   const [post, setPost] = useState({
@@ -77,7 +77,7 @@ const Post = () => {
       );
 
       dispatch(getCreatedTweets({ tweet: data }));
-      toast.success(data.message);
+      successToast(data.message);
       navigate("/home");
     } catch (err) {
       handleError(err.response?.data?.message);
@@ -88,7 +88,7 @@ const Post = () => {
 
   const handleError = (message) => {
     setError(message);
-    toast.error(message);
+    errorToast(message);
   };
 
   const handleRemoveImage = () => {
@@ -158,7 +158,7 @@ const Post = () => {
               <div className="relative mt-4">
                 <img
                   src={imagePreview}
-                  alt="Cover Preview"
+                  alt="postImage"
                   className="w-full h-40 md:h-48 object-cover rounded-md"
                 />
                 <button

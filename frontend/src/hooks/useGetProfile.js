@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import {
+  successToast,
+  errorToast,
+} from "../components/ResusableComponents/NotifyToast";
 
 export const useGetProfile = (id) => {
   const dispatch = useDispatch();
@@ -27,10 +30,10 @@ export const useGetProfile = (id) => {
           }
         );
 
-        // toast.success(res?.data?.message);
+        successToast(res.data.message);
         dispatch(setProfile(res.data.user));
       } catch (error) {
-        toast.error(error?.res?.data?.message);
+        errorToast(error?.res?.data?.message);
         console.error("Error fetching profile:", error);
 
         if (error.response) {

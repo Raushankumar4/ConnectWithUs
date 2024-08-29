@@ -8,6 +8,8 @@ import { updateUser } from "../../store/slices/userSlice";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import UpdatePassword from "../UpadatePassword/UpdatePassword";
 import Spinner from "../ResusableComponents/Spinner";
+import { useGetProfile } from "../../hooks/useGetProfile";
+import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 
 const UpdateProfile = () => {
   const [userInput, setUserInput] = useState({
@@ -22,6 +24,7 @@ const UpdateProfile = () => {
   const dispatch = useDispatch();
   const id = user?.user?._id;
   const token = useSelector((state) => state.auth.token);
+  useGetProfile(user?.user?._id);
 
   const handleOnChange = (e) => {
     const { name, value, files } = e.target;
@@ -56,11 +59,10 @@ const UpdateProfile = () => {
         }
       );
       dispatch(updateUser(res.data));
-      toast.success("Profile updated successfully");
+      successToast("Profile updated successfully");
       navigate("/home");
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      errorToast("Failed to update profile");
     } finally {
       setLoading(false);
     }

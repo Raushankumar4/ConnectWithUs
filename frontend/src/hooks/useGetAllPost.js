@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTweets } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import {
+  errorToast,
+  successToast,
+} from "../components/ResusableComponents/NotifyToast";
 
 export const useGetAllPost = (id) => {
   const dispatch = useDispatch();
@@ -30,12 +33,10 @@ export const useGetAllPost = (id) => {
           }
         );
 
-        console.log("Profile data:", res.data);
-        toast.success(res?.data?.message || "All Post");
         dispatch(getAllTweets(res.data));
+        successToast(res?.data?.message || "All Post");
       } catch (error) {
-        toast.error(error.res.data.message);
-        console.error("Error fetching All Post:", error);
+        errorToast(error.res.data.message);
 
         if (error.response) {
           const { status, data } = error.response;

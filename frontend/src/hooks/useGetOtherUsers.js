@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setOtherUsers } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import {
+  errorToast,
+  successToast,
+} from "../components/ResusableComponents/NotifyToast";
 
 export const useGetOtherUsers = (id) => {
   const dispatch = useDispatch();
@@ -27,9 +30,9 @@ export const useGetOtherUsers = (id) => {
           }
         );
         dispatch(setOtherUsers(res.data));
-        toast.success(res?.data?.message || "All Other User");
+        successToast(res?.data?.message || "All Other User");
       } catch (error) {
-        toast.error(error?.res?.data?.message);
+        errorToast(error?.res?.data?.message);
 
         if (error.response) {
           const { status, data } = error.response;
