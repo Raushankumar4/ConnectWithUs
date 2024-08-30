@@ -19,9 +19,6 @@ export const useGetAllPost = (id) => {
       if (!id || !token) return;
 
       try {
-        console.log("Fetching all post with ID:", id);
-        console.log("Token:", token);
-
         const res = await axios.get(
           `${backendUrl}/api/v1/tweet/getalltweets/${id}`,
           {
@@ -42,16 +39,16 @@ export const useGetAllPost = (id) => {
           const { status, data } = error.response;
 
           if (status === 401) {
-            console.log("Unauthorized. Redirecting to login...");
+            errorToast("Unauthorized. Redirecting to login...");
             navigate("/login");
           } else if (status === 403) {
-            console.log("Forbidden. Access denied.");
+            errorToast("Forbidden. Access denied.");
           } else {
-            console.log("Error response status:", status);
-            console.log("Error response data:", data);
+            errorToast("Error response status:", status);
+            errorToast("Error response data:", data);
           }
         } else {
-          console.log("Error message:", error.message);
+          errorToast("Error message:", error.message);
         }
       }
     };

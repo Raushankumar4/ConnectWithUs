@@ -3,11 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   profile: null,
-  otherUsers: [],
-  tweet: [],
+  otherUsers: null,
+  tweet: null,
   allTweets: [],
   otherTweets: [],
   myPost: [],
+  refresh: false,
 };
 
 const userSlice = createSlice({
@@ -55,6 +56,9 @@ const userSlice = createSlice({
         post?._id === updatedPost._id ? { ...post, ...updatedPost } : post
       );
     },
+    toggleRefresh: (state) => {
+      state.refresh = !state.refresh;
+    },
   },
 });
 
@@ -69,6 +73,7 @@ export const {
   getMyAllPost,
   deletePost,
   updatePost,
+  toggleRefresh,
 } = userSlice.actions;
 
 export default userSlice.reducer;

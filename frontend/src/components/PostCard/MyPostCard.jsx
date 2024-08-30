@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { CiHeart } from "react-icons/ci";
 
@@ -11,36 +11,26 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePostThunk } from "../../store/thunk/deletePost";
-import { useGetMyPost } from "../../hooks/useGetMyPost";
 import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 import Modal from "../ResusableComponents/Modal";
 import UpdatePost from "../UpdatePost/UpdatePost";
 import { backendUrl } from "../../constant";
+import { toggleRefresh } from "../../store/slices/userSlice";
 
 const stripHtmlTags = (html) => html.replace(/<\/?[^>]+>/gi, "");
 
 const MyPostCard = ({ post }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const cleanedDescription = stripHtmlTags(post?.description || "");
   const { profile, user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const userId = user?.user?._id;
-  console.log(post);
 
-  useGetMyPost(userId);
-
-  useEffect(() => {
-    setIsLiked(post?.likes?.includes(userId) || false);
-  }, [post, userId]);
-
-  const likeDislike = async () => {
-    if (!userId || !token || !post?._id) return;
+  const likeDislike = async (id) => {
     try {
       const res = await axios.put(
-        `${backendUrl}/api/v1/tweet/likes/${post?._id}`,
-        { userId },
+        `${backendUrl}/api/v1/tweet/likes/${id}`,
+        { id: user?.user?._id },
         {
           headers: {
             "Content-Type": "application/json",
@@ -49,10 +39,19 @@ const MyPostCard = ({ post }) => {
           withCredentials: true,
         }
       );
-      setIsLiked((prev) => !prev);
-      successToast(res.data.message || "Action successful");
+      console.log(res.data);
+
+      if (res.data.success === true) {
+        successToast(res.data.message);
+        dispatch(toggleRefresh());
+      }
+      if (res.data.success === false) {
+        successToast(res.data.message);
+        dispatch(toggleRefresh());
+      }
+      dispatch(getRefresh());
     } catch (error) {
-      console.error("Error liking/unliking post:", error.message);
+      console.log(error?.res?.data.message);
       errorToast("Failed to update like status.");
     }
   };
@@ -105,16 +104,14 @@ const MyPostCard = ({ post }) => {
         {cleanedDescription}
       </p>
       <div className="flex items-center space-x-4 text-gray-600 mb-4">
-        <div
-          onClick={likeDislike}
-          className="flex items-center space-x-1 cursor-pointer hover:text-red-500 transition-colors duration-300"
-        >
-          {isLiked ? (
+        <div className="flex items-center space-x-1 cursor-pointer hover:text-red-500 transition-colors duration-300">
+          {/* <CiHeart className="w-5 h-5" /> */}
+          {/* {isLiked ? (
             <FaHeart className="w-5 h-5 text-red-500" />
           ) : (
-            <CiHeart className="w-5 h-5" />
-          )}
-          <span className="text-sm">{post?._id}</span>
+          )} */}
+          <CiHeart onClick={() => likeDislike(post?._id)} className="w-5 h-5" />
+          <span className="text-sm">{post?.like?.length}</span>
         </div>
 
         <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-800 transition-colors duration-300">

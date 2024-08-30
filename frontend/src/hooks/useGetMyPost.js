@@ -2,7 +2,7 @@ import axios from "axios";
 import { backendUrl } from "../constant";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyAllPost } from "../store/slices/userSlice";
+import { getMyAllPost, toggleRefresh } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
@@ -20,8 +20,6 @@ export const useGetMyPost = (id) => {
       if (!id || !token) return;
 
       try {
-        console.log("Token:", token);
-
         const res = await axios.get(
           `${backendUrl}/api/v1/tweet/getmypost/${id}`,
           {
@@ -34,6 +32,7 @@ export const useGetMyPost = (id) => {
         );
 
         dispatch(getMyAllPost(res.data));
+        dispatch(toggleRefresh());
         successToast(res.data.message);
       } catch (error) {
         errorToast(error?.res?.data?.message);

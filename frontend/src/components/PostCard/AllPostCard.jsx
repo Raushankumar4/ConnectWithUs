@@ -6,8 +6,12 @@ import {
   FaTrash,
   FaEdit,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toggleRefresh } from "../../store/slices/userSlice";
+import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
+import { backendUrl } from "../../constant";
+import axios from "axios";
 
 const stripHtmlTags = (html) => {
   return html.replace(/<\/?[^>]+>/gi, "");
@@ -24,6 +28,36 @@ const AllPostCard = ({ tweet }) => {
 
   const handleDelete = () => {
     console.log("Delete button clicked");
+  };
+
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const userId = user?.user?._id;
+
+  const likeDislike = async (id) => {
+    if (!userId || !token || !id) return;
+
+    try {
+      const res = await axios.put(
+        `${backendUrl}/api/v1/tweet/likes/${id}`,
+        { userId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
+      dispatch(toggleRefresh());
+      if (res.data.success) {
+        successToast(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error liking/unliking post:", error.response.data.message);
+      errorToast("Failed to update like status.");
+    }
   };
 
   return (
@@ -66,7 +100,8 @@ const AllPostCard = ({ tweet }) => {
         </div>
         <div className="flex items-center space-x-1 cursor-pointer hover:text-red-500 transition-colors duration-300">
           <FaRegHeart className="w-5 h-5" />
-          <span className="text-sm">{tweet?.likes || 0}</span>
+          <button onClick={() => likeDislike(tweet?._id)}>like</button>
+          <span className="text-sm">{tweet?.like.length || 0}</span>
         </div>
         <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-800 transition-colors duration-300">
           <FaRegBookmark className="w-5 h-5" />
