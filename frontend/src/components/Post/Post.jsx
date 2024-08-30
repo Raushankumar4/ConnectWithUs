@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { backendUrl } from "../../constant";
 import { getCreatedTweets } from "../../store/slices/userSlice";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
+import MyPost from "../UserPost/MyPost";
 
 const Post = () => {
   const [post, setPost] = useState({
@@ -41,13 +40,6 @@ const Post = () => {
     }
   };
 
-  const handleQuillChange = (value) => {
-    setPost((prevPost) => ({
-      ...prevPost,
-      description: value,
-    }));
-  };
-
   const handleOnPost = async (e) => {
     e.preventDefault();
     if (!isAuthenticated || !userId || !token) {
@@ -78,7 +70,8 @@ const Post = () => {
 
       dispatch(getCreatedTweets({ tweet: data }));
       successToast(data.message);
-      navigate("/home");
+
+      navigate("/post");
     } catch (err) {
       handleError(err.response?.data?.message);
     } finally {
@@ -97,31 +90,22 @@ const Post = () => {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center p-4 md:p-6 lg:p-8">
+    <div className="  flex justify-center items-center p-4 md:p-6 lg:p-8 bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl relative">
         <div className="absolute top-4 left-4 flex items-center space-x-4">
           <img
             src={user?.user?.profileImage}
             alt="Profile"
-            className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+            className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-gray-300 object-cover"
           />
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 md:gap-8">
-            <h2 className="text-base md:text-lg font-semibold">
+            <h2 className="text-base md:text-lg font-semibold text-gray-800">
               {user?.user?.fullName}
             </h2>
-            <Link
-              to="/home"
-              className="bg-black text-white p-2 rounded-md shadow-md text-center"
-            >
-              Back
-            </Link>
           </div>
         </div>
-        <form
-          onSubmit={handleOnPost}
-          className="pt-24 pl-20 md:pt-28 md:pl-24 lg:pt-32 lg:pl-28"
-        >
-          <h1 className="text-xl md:text-2xl mb-4 font-semibold">
+        <form onSubmit={handleOnPost} className="pt-20 md:pt-28 lg:pt-32">
+          <h1 className="text-xl md:text-2xl mb-4 font-semibold text-gray-800">
             Create a Post
           </h1>
           {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -132,19 +116,20 @@ const Post = () => {
             >
               Description
             </label>
-            <ReactQuill
+            <input
+              type="text"
+              name="description"
               value={post.description}
-              onChange={handleQuillChange}
-              theme="snow"
-              className="text-sm md:text-base"
+              onChange={handleOnChange}
+              className="w-full text-sm md:text-base p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4 relative">
             <label
               htmlFor="postImage"
-              className="text-white text-xs md:text-sm bg-black p-2 md:p-3 rounded-lg flex items-center justify-center cursor-pointer    md:w-10 md:h-10 min-w-fit"
+              className="block text-white text-xs md:text-sm bg-black p-2 md:p-3 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
             >
-              Add image
+              Add Image
             </label>
             <input
               onChange={handleOnChange}
@@ -158,7 +143,7 @@ const Post = () => {
               <div className="relative mt-4">
                 <img
                   src={imagePreview}
-                  alt="postImage"
+                  alt="Post Preview"
                   className="w-full h-40 md:h-48 object-cover rounded-md"
                 />
                 <button
@@ -178,7 +163,7 @@ const Post = () => {
               className={`${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-black hover:bg-blue-700"
+                  : "bg-black hover:bg-gray-800"
               } text-white py-2 px-4 rounded-md text-sm md:text-base`}
             >
               {loading ? "Posting..." : "Post"}

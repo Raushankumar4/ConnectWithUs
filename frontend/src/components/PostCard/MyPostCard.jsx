@@ -105,11 +105,6 @@ const MyPostCard = ({ post }) => {
       </p>
       <div className="flex items-center space-x-4 text-gray-600 mb-4">
         <div className="flex items-center space-x-1 cursor-pointer hover:text-red-500 transition-colors duration-300">
-          {/* <CiHeart className="w-5 h-5" /> */}
-          {/* {isLiked ? (
-            <FaHeart className="w-5 h-5 text-red-500" />
-          ) : (
-          )} */}
           <CiHeart onClick={() => likeDislike(post?._id)} className="w-5 h-5" />
           <span className="text-sm">{post?.like?.length}</span>
         </div>

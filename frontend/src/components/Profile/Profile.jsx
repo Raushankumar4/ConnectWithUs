@@ -1,12 +1,8 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useGetProfile } from "../../hooks/useGetProfile";
 import { useSelector } from "react-redux";
-import MyPost from "../UserPost/MyPost";
-import { useState } from "react";
-import Modal from "../ResusableComponents/Modal";
-  
+
 const Profile = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { user, profile } = useSelector((store) => store.user);
   const token = useSelector((store) => store.auth);
@@ -24,7 +20,7 @@ const Profile = () => {
     <>
       {isAuthenticated && (
         <div className="min-h-screen bg-gray-200 flex items-center justify-center">
-          <div className="w-1/2 max-w-1xl mx-auto my-4 p-6 bg-white text-gray-800 shadow-lg rounded-lg overflow-hidden">
+          <div className="w-[88%] lg:w-1/2 max-w-1xl mx-auto my-4 p-6 bg-white text-gray-800 shadow-lg rounded-lg overflow-hidden">
             {/* Back Button */}
             <button
               onClick={handleBackClick}
@@ -49,7 +45,7 @@ const Profile = () => {
 
             {/* Cover Image */}
             <div
-              className="relative h-40 md:h-48 lg:h-46 bg-cover bg-center rounded-t-lg"
+              className="relative h-40 md:h-30 lg:h-30 bg-cover bg-center rounded-t-lg"
               style={{
                 backgroundImage: `url(${profile?.coverImage})`,
               }}
@@ -60,7 +56,7 @@ const Profile = () => {
               <img
                 src={`${profile?.profileImage}`}
                 alt="Profile Image"
-                className="w-32 h-32 md:w-34 md:h-34 lg:w-48 lg:h-48 rounded-full border-4 border-white shadow-lg"
+                className="w-32 h-32 md:w-34 md:h-34 lg:w-40 lg:h-40 rounded-full border-4 border-white shadow-lg"
               />
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold mt-4">
                 {profile?.fullName}
@@ -92,18 +88,7 @@ const Profile = () => {
               >
                 Update Details
               </Link>
-              <button
-                onClick={() => setIsOpen((prev) => !prev)}
-                className="mt-4 p-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
-              >
-                {isOpen ? "" : "post"}
-              </button>
             </div>
-
-            {/* Modal */}
-            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-              <MyPost />
-            </Modal>
           </div>
         </div>
       )}

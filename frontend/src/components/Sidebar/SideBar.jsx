@@ -7,11 +7,15 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { IoLogoAndroid } from "react-icons/io";
 import { HiMenu } from "react-icons/hi";
 import { CgProfile } from "react-icons/cg";
-import { CiSquarePlus } from "react-icons/ci";
 import { useSelector } from "react-redux";
+import MyPost from "../UserPost/MyPost";
+import Modal from "../ResusableComponents/Modal";
+import Post from "../Post/Post";
 
 const Sidebar = ({ onLogout }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isMyPostOpen, setIsMyPostOpen] = useState(false);
+  const [isPostOpen, setIsPostOpen] = useState(false);
 
   const { user } = useSelector((store) => store.user);
 
@@ -54,13 +58,22 @@ const Sidebar = ({ onLogout }) => {
               </Link>
             </li>
             <li>
-              <Link
-                to="/explore"
+              <button
+                onClick={() => setIsMyPostOpen((prev) => !prev)}
                 className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
               >
                 <MdOutlineTravelExplore className="w-6 h-6 mr-3" />
-                <span className="md:inline">Explore</span>
-              </Link>
+                <span className="md:inline">My Post</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setIsPostOpen((prev) => !prev)}
+                className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
+              >
+                <MdOutlineTravelExplore className="w-6 h-6 mr-3" />
+                <span className="md:inline">Post</span>
+              </button>
             </li>
             <li>
               <Link
@@ -73,20 +86,11 @@ const Sidebar = ({ onLogout }) => {
             </li>
             <li>
               <Link
-                to={`/post`}
-                className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
-              >
-                <CiSquarePlus className="w-6 h-6 mr-3" />
-                <span className="md:inline">Post</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/bookmarks"
+                to="/settings"
                 className="flex items-center py-2 px-4 rounded-md transition-colors hover:bg-gray-300"
               >
                 <PiBookmarkSimple className="w-6 h-6 mr-3" />
-                <span className="md:inline">Setting</span>
+                <span className="md:inline">Settings</span>
               </Link>
             </li>
           </ul>
@@ -99,6 +103,12 @@ const Sidebar = ({ onLogout }) => {
           <span className="md:inline">Logout</span>
         </button>
       </div>
+      <Modal isOpen={isMyPostOpen} onClose={() => setIsMyPostOpen(false)}>
+        <MyPost />
+      </Modal>
+      <Modal isOpen={isPostOpen} onClose={() => setIsPostOpen(false)}>
+        <Post />
+      </Modal>
     </div>
   );
 };

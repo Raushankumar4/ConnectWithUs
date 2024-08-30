@@ -11,7 +11,6 @@ import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import UpdateProfile from "./components/UpdateProfile/UpdateProfile.jsx";
 import RegisterUser from "./components/Pages/RegisterUser/RegisterUser.jsx";
-import Post from "./components/Post/Post.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,10 +29,7 @@ const router = createBrowserRouter([
     path: "/home",
     element: <Home />,
   },
-  {
-    path: "/post",
-    element: <Post />,
-  },
+
   {
     path: "/profile/:id",
     element: <Profile />,

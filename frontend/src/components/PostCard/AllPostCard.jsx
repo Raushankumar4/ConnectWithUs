@@ -13,34 +13,18 @@ import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 import { backendUrl } from "../../constant";
 import axios from "axios";
 
-const stripHtmlTags = (html) => {
-  return html.replace(/<\/?[^>]+>/gi, "");
-};
-
 const AllPostCard = ({ tweet }) => {
-  const cleanedDescription = stripHtmlTags(tweet?.description || "");
   const { profile } = useSelector((store) => store.user);
   const { user } = useSelector((store) => store.user);
 
-  const handleEdit = () => {
-    console.log("Edit button clicked");
-  };
-
-  const handleDelete = () => {
-    console.log("Delete button clicked");
-  };
-
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const userId = user?.user?._id;
 
   const likeDislike = async (id) => {
-    if (!userId || !token || !id) return;
-
     try {
       const res = await axios.put(
         `${backendUrl}/api/v1/tweet/likes/${id}`,
-        { userId },
+        { id: user?.user?._id },
         {
           headers: {
             "Content-Type": "application/json",
@@ -50,12 +34,18 @@ const AllPostCard = ({ tweet }) => {
         }
       );
       console.log(res.data);
-      dispatch(toggleRefresh());
-      if (res.data.success) {
+
+      if (res.data.success === true) {
         successToast(res.data.message);
+        dispatch(toggleRefresh());
       }
+      if (res.data.success === false) {
+        successToast(res.data.message);
+        dispatch(toggleRefresh());
+      }
+      dispatch(getRefresh());
     } catch (error) {
-      console.error("Error liking/unliking post:", error.response.data.message);
+      console.log(error?.res?.data.message);
       errorToast("Failed to update like status.");
     }
   };
@@ -80,7 +70,7 @@ const AllPostCard = ({ tweet }) => {
       {/* Post Image */}
       {/* Post Description */}
       <p className="text-gray-800 mb-4 text-start  pl-2 md:text-lg lg:text-md">
-        {cleanedDescription}
+        {tweet?.description}
       </p>
       {tweet?.postImage && (
         <div className="relative w-full   mb-4 rounded-lg overflow-hidden">
@@ -108,20 +98,6 @@ const AllPostCard = ({ tweet }) => {
         </div>
       </div>
       {/* Edit and Delete Buttons */}
-      <div className="absolute top-2 right-2 flex space-x-2">
-        <button
-          onClick={handleEdit}
-          className="p-2 text-gray-600 hover:text-blue-500 transition-colors duration-300"
-        >
-          <FaEdit className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleDelete}
-          className="p-2 text-gray-600 hover:text-red-500 transition-colors duration-300"
-        >
-          <FaTrash className="w-5 h-5" />
-        </button>
-      </div>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const OtherUser = () => {
           </div>
           <button
             onClick={() => openModal(otherUser._id)}
-            className="mt-4 z-50 p-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
+            className="mt-4 p-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
           >
             Profile
           </button>
