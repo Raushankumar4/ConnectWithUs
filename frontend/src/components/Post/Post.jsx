@@ -127,7 +127,7 @@ const Post = () => {
           <div className="mb-4 relative">
             <label
               htmlFor="postImage"
-              className="block text-white text-xs md:text-sm bg-black p-2 md:p-3 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
+              className=" text-white text-xs md:text-sm bg-black p-2 md:p-3 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
             >
               Add Image
             </label>

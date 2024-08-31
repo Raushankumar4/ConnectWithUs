@@ -276,18 +276,17 @@ export const followUser = asyncHandler(async (req, res) => {
     await user.updateOne({ $push: { followers: loggeInUserId } });
     await loggedInUser.updateOne({ $push: { following: userId } });
   } else {
-    return res
-      .status(400)
-      .json(new ApiResponse(400, `User Already to follow ${user.fullName}`));
+    return res.status(400).json({
+      message: `User Already to follow ${user.fullName}`,
+      success: false,
+    });
   }
   return res
     .status(201)
-    .json(
-      new ApiResponse(
-        200,
-        `${loggedInUser.fullName} just follow to ${user.fullName}`
-      )
-    );
+    .json({
+      message: `${loggedInUser.fullName} just follow to ${user.fullName}`,
+      success: false,
+    });
 });
 
 // unfollow user
