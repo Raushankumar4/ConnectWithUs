@@ -281,12 +281,10 @@ export const followUser = asyncHandler(async (req, res) => {
       success: false,
     });
   }
-  return res
-    .status(201)
-    .json({
-      message: `${loggedInUser.fullName} just follow to ${user.fullName}`,
-      success: false,
-    });
+  return res.status(201).json({
+    message: `${loggedInUser.fullName} just follow to ${user.fullName}`,
+    success: false,
+  });
 });
 
 // unfollow user
@@ -302,16 +300,14 @@ export const unFollowUser = asyncHandler(async (req, res) => {
     await user.updateOne({ $pull: { followers: loggeInUserId } });
     await loggedInUser.updateOne({ $pull: { following: userId } });
   } else {
-    return res.status(400).json(new ApiResponse(400, `User not following yet`));
+    return res
+      .status(400)
+      .json({ message: "User not following yet", success: false });
   }
-  return res
-    .status(201)
-    .json(
-      new ApiResponse(
-        200,
-        `${loggedInUser.fullName} just unfollow to ${user.fullName}`
-      )
-    );
+  return res.status(201).json({
+    message: `${loggedInUser.fullName} just unfollow to ${user.fullName}`,
+    success: true,
+  });
 });
 
 // update password
