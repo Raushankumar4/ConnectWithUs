@@ -3,20 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { backendUrl } from "../../constant";
 import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
-import { toggleRefresh } from "../../store/slices/userSlice";
+import {
+  followUser,
+  unfollowUser,
+  toggleRefresh,
+} from "../../store/slices/userSlice";
 
 const OtherUserDetails = ({ userId }) => {
   const { otherUsers, user } = useSelector((store) => store.user);
-  const otheruser = otherUsers?.data.find((user) => user._id === userId);
   const token = useSelector((store) => store.auth.token);
   const dispatch = useDispatch();
 
-  if (!otheruser) return <div className="text-center p-4">Loading...</div>;
+  const otheruser = otherUsers.data.find((user) => user._id === userId);
+
+  const isFollowing = user?.user?.following?.includes(userId);
 
   const handleOnfollow = async () => {
     try {
-      // if (!userId || !otheruser) return <h1>No User Found</h1>;
-      const id = otheruser?._id;
+      const id = otheruser._id;
       const res = await axios.post(
         `${backendUrl}/api/v1/users/follow/${id}`,
         { id: user?.user?._id },
@@ -30,7 +34,8 @@ const OtherUserDetails = ({ userId }) => {
       );
 
       if (res.data.success) {
-        errorToast(res.data.message);
+        dispatch(followUser({ userId: user?.user?._id, followUserId: id }));
+        successToast(res.data.message);
         dispatch(toggleRefresh());
       }
     } catch (error) {
@@ -41,8 +46,7 @@ const OtherUserDetails = ({ userId }) => {
 
   const handleUnfollow = async () => {
     try {
-      // if (!userId || !otheruser) return <h1>No User Found</h1>;
-      const id = otheruser?._id;
+      const id = otheruser._id;
       const res = await axios.post(
         `${backendUrl}/api/v1/users/unfollow/${id}`,
         { id: user?.user?._id },
@@ -54,9 +58,11 @@ const OtherUserDetails = ({ userId }) => {
           withCredentials: true,
         }
       );
+
       if (res.data.success) {
-        dispatch(toggleRefresh());
+        dispatch(unfollowUser({ userId: user?.user?._id, unfollowUserId: id }));
         successToast(res.data.message);
+        dispatch(toggleRefresh()); // Trigger a refresh to get updated data
       }
     } catch (error) {
       errorToast(error.response.data.message);
@@ -64,10 +70,13 @@ const OtherUserDetails = ({ userId }) => {
     }
   };
 
+  // Handle loading state
+  if (!otheruser) return <div className="text-center p-4">Loading...</div>;
+
   return (
-    <div className="-z-0 w-full  max-w-lg mx-auto p-6 rounded-lg shadow-lg relative">
+    <div className="-z-0 w-full max-w-lg mx-auto p-6 rounded-lg shadow-lg relative">
       {/* Cover Image */}
-      <div className="relative ">
+      <div className="relative">
         <img
           className="w-full h-32 object-cover rounded-t-lg"
           src={otheruser.coverImage || "/default-cover.jpg"}
@@ -90,7 +99,7 @@ const OtherUserDetails = ({ userId }) => {
 
         {/* Follow/Unfollow Button */}
         <div className="flex justify-center mt-4">
-          {user?.user?.following?.includes(userId) ? (
+          {isFollowing ? (
             <button
               onClick={handleUnfollow}
               className="px-4 py-2 text-white rounded-lg bg-gray-500 hover:bg-gray-600 ml-4"
@@ -100,7 +109,7 @@ const OtherUserDetails = ({ userId }) => {
           ) : (
             <button
               onClick={handleOnfollow}
-              className="px-4 py-2 tracking-wide  text-white rounded-lg bg-black hover:bg-gray-600 ml-4"
+              className="px-4 py-2 tracking-wide text-white rounded-lg bg-black hover:bg-gray-600 ml-4"
             >
               Follow
             </button>

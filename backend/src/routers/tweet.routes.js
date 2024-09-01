@@ -3,7 +3,7 @@ import {
   createTweet,
   deleteTweet,
   getAllTweets,
-  getFollowingtweets,
+  getFollowingTweets,
   getMyTweets,
   likeTweetOrDislikeTweet,
   updateTweet,
@@ -26,6 +26,6 @@ router.route("/getmypost/:id").get(isAuthenticated, getMyTweets);
 
 router
   .route("/getallfollowingtweets/:id")
-  .get(isAuthenticated, getFollowingtweets);
+  .get(isAuthenticated, getFollowingTweets);
 
 export default router;

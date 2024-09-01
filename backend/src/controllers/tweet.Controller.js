@@ -194,17 +194,20 @@ export const getAllTweets = asyncHandler(async (req, res) => {
 });
 
 // get following tweets
-export const getFollowingtweets = asyncHandler(async (req, res) => {
-  const { id } = req.params.id;
-
-  const loggedInUser = await User.findById(id);
-
-  const followingUserTweets = await Promise.all(
-    loggedInUser.following.map((otherUserId) => {
-      return Tweet.find({ userId: otherUserId });
-    })
-  );
-  return res.status(200).json({
-    tweets: [].concat(...followingUserTweets),
-  });
-});
+export const getFollowingTweets = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const loggedInUser = await User.findById(id);
+    const followingUserTweet = await Promise.all(
+      loggedInUser.following.map((otherUsersId) => {
+        return Tweet.find({ userId: otherUsersId });
+      })
+    );
+    return res.status(200).json({
+      message: "Following User Tweets",
+      tweets: [].concat(...followingUserTweet),
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};

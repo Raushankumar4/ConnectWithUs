@@ -3,12 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   profile: null,
-  otherUsers: null,
+  otherUsers: [],
   tweet: null,
   allTweets: [],
   otherTweets: [],
   myPost: [],
   refresh: false,
+  getAllFollowingPost: null,
 };
 
 const userSlice = createSlice({
@@ -49,7 +50,6 @@ const userSlice = createSlice({
         );
       }
     },
-
     updatePost: (state, action) => {
       const updatedPost = action.payload;
       state.myPost = state.myPost?.tweets?.map((post) =>
@@ -58,6 +58,38 @@ const userSlice = createSlice({
     },
     toggleRefresh: (state) => {
       state.refresh = !state.refresh;
+    },
+    followUser: (state, action) => {
+      const { userId, followUserId } = action.payload;
+
+      if (state.user) {
+        state.user.following = [...state.user.following, followUserId];
+      }
+
+      state.otherUsers = state.otherUsers.map((user) =>
+        user._id === followUserId
+          ? { ...user, followers: [...user.followers, userId] }
+          : user
+      );
+    },
+    unfollowUser: (state, action) => {
+      const { userId, unfollowUserId } = action.payload;
+
+      if (state.user) {
+        state.user.following = state.user.following.filter(
+          (id) => id !== unfollowUserId
+        );
+      }
+
+      state.otherUsers = state.otherUsers.map((user) =>
+        user._id === unfollowUserId
+          ? { ...user, followers: user.followers.filter((id) => id !== userId) }
+          : user
+      );
+    },
+
+    setAllFollowingPost: (state, action) => {
+      state.getAllFollowingPost = action.payload;
     },
   },
 });
@@ -74,6 +106,9 @@ export const {
   deletePost,
   updatePost,
   toggleRefresh,
+  followUser,
+  unfollowUser,
+  setAllFollowingPost,
 } = userSlice.actions;
 
 export default userSlice.reducer;
