@@ -55,7 +55,7 @@ const Login = () => {
       );
       dispatch(loginSuccess({ token: response.data.token }));
       dispatch(setUser({ user: response.data.user }));
-      successToast(response.data.message);
+      successToast(response.data.message || "Failed to Login !");
       navigate("/home");
     } catch (error) {
       errorToast(error.response?.data?.message);

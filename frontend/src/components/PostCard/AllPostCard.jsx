@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { toggleRefresh } from "../../store/slices/userSlice";
+import { toggleRefresh, setSavePost } from "../../store/slices/userSlice";
 import { errorToast, successToast } from "../ResusableComponents/NotifyToast";
 import { backendUrl } from "../../constant";
 import axios from "axios";
@@ -19,6 +19,29 @@ const AllPostCard = ({ tweet }) => {
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+
+  const savedPost = async (id) => {
+    try {
+      const res = await axios.put(
+        `${backendUrl}/api/v1/users/bookmark/${id}`,
+        { id: user?.user?._id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      successToast(res.data.message);
+      dispatch(setSavePost(res.data));
+      dispatch(toggleRefresh());
+    } catch (error) {
+      errorToast(error.response.data.message);
+      console.log(error.response.data.message);
+    }
+  };
 
   const likeDislike = async (id) => {
     try {
@@ -33,17 +56,9 @@ const AllPostCard = ({ tweet }) => {
           withCredentials: true,
         }
       );
-      console.log(res.data);
 
-      if (res.data.success === true) {
-        successToast(res.data.message);
-        dispatch(toggleRefresh());
-      }
-      if (res.data.success === false) {
-        successToast(res.data.message);
-        dispatch(toggleRefresh());
-      }
-      dispatch(getRefresh());
+      successToast(res.data.message);
+      dispatch(toggleRefresh());
     } catch (error) {
       console.log(error?.res?.data.message);
       errorToast("Failed to update like status.");
@@ -89,12 +104,18 @@ const AllPostCard = ({ tweet }) => {
           <span className="text-sm">{tweet?.comments?.length || 0}</span>
         </div>
         <div className="flex items-center space-x-1 cursor-pointer hover:text-red-500 transition-colors duration-300">
-          <FaRegHeart className="w-5 h-5" />
-          <button onClick={() => likeDislike(tweet?._id)}>like</button>
+          <FaRegHeart
+            onClick={() => likeDislike(tweet?._id)}
+            className="w-5 h-5"
+          />
+
           <span className="text-sm">{tweet?.like.length || 0}</span>
         </div>
         <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-800 transition-colors duration-300">
-          <FaRegBookmark className="w-5 h-5" />
+          <FaRegBookmark
+            onClick={() => savedPost(tweet?._id)}
+            className="w-5 h-5"
+          />
         </div>
       </div>
       {/* Edit and Delete Buttons */}

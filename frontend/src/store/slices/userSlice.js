@@ -10,6 +10,7 @@ const initialState = {
   myPost: [],
   refresh: false,
   getAllFollowingPost: null,
+  savedPost: null,
 };
 
 const userSlice = createSlice({
@@ -91,6 +92,9 @@ const userSlice = createSlice({
     setAllFollowingPost: (state, action) => {
       state.getAllFollowingPost = action.payload;
     },
+    setSavePost: (state, action) => {
+      state.savedPost = action.payload;
+    },
   },
 });
 
@@ -109,6 +113,7 @@ export const {
   followUser,
   unfollowUser,
   setAllFollowingPost,
+  setSavePost,
 } = userSlice.actions;
 
 export default userSlice.reducer;
