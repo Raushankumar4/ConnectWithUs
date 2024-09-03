@@ -161,7 +161,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     .json({ message: `Welcome ${user.fullName}`, token, user, success: true });
 });
 
-// Logout user
+//Logout user
 export const logOutUser = asyncHandler(async (req, res) => {
   // Remove token cookie
   removeTokenCookie(res);
