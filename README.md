@@ -2,8 +2,6 @@
 
 Connect With Us is a web application built using the MERN stack that allows users to connect, share experiences, and engage with a community. This project aims to provide a platform for users to interact through messages, posts, and comments.
 
-
-
 ## Features
 
 - User authentication (sign up, login, logout)
