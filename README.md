@@ -2,6 +2,10 @@
 
 Connect With Us is a web application built using the MERN stack that allows users to connect, share experiences, and engage with a community. This project aims to provide a platform for users to interact through messages, posts, and comments.
 
+## Live Demo
+
+Check out the live application [here](https://connect-with-us-dzlo.vercel.app).
+
 ## Features
 
 - User authentication (sign up, login, logout)
